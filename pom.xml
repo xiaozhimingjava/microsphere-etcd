@@ -45,6 +45,7 @@
     <modules>
         <module>microsphere-etcd-parent</module>
         <module>microsphere-etcd-dependencies</module>
+        <module>microsphere-etcd-spring-cloud</module>
     </modules>
 
     <distributionManagement>
