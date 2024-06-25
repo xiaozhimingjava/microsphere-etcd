@@ -26,11 +26,11 @@ import io.microsphere.spring.cloud.client.service.registry.DefaultRegistration;
 import org.slf4j.Logger;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static io.microsphere.etcd.spring.cloud.client.util.KVClientUtils.buildServiceInstancePath;
+import static io.microsphere.etcd.spring.cloud.client.util.KVClientUtils.toByteSequence;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -46,8 +46,6 @@ public class EtcdServiceRegistry implements ServiceRegistry<DefaultRegistration>
     private static final Logger logger = getLogger(EtcdServiceRegistry.class);
 
     private static final String STATUS_METADATA_KEY = "status";
-
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     private final KV kv;
 
@@ -94,8 +92,7 @@ public class EtcdServiceRegistry implements ServiceRegistry<DefaultRegistration>
         String rootPath = "/services";
         String serviceId = registration.getServiceId();
         String instanceId = registration.getInstanceId();
-        String path = rootPath + "/" + serviceId + "/" + instanceId;
-        return path;
+        return buildServiceInstancePath(rootPath, serviceId, instanceId);
     }
 
     private String deserialize(DefaultRegistration registration) {
@@ -119,7 +116,4 @@ public class EtcdServiceRegistry implements ServiceRegistry<DefaultRegistration>
         CompletableFuture<DeleteResponse> deleteResponse = kv.delete(key);
     }
 
-    private ByteSequence toByteSequence(String value) {
-        return ByteSequence.from(value.getBytes(DEFAULT_CHARSET));
-    }
 }
