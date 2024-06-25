@@ -26,9 +26,7 @@
         <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
         <spring-cloud-dependencies.version>2021.0.7</spring-cloud-dependencies.version>
         <!-- Third-party versions -->
-        <resilience4j.version>1.7.0</resilience4j.version>
-        <mybatis-starter.version>3.0.1</mybatis-starter.version>
-        <mybatis.version>3.5.11</mybatis.version>
+        <jetcd.version>0.7.5</jetcd.version>
     </properties>
 
     <dependencyManagement>
@@ -79,6 +77,20 @@
                 <version>${microsphere-spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- etcd Java Client -->
+            <dependency>
+                <groupId>io.etcd</groupId>
+                <artifactId>jetcd-core</artifactId>
+                <version>${jetcd.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.etcd</groupId>
+                <artifactId>jetcd-test</artifactId>
+                <version>${jetcd.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
