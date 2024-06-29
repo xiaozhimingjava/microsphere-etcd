@@ -19,6 +19,7 @@ package io.microsphere.etcd.spring.cloud.client.discovery;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.etcd.jetcd.Client;
+import io.microsphere.etcd.spring.cloud.client.EtcdClientProperties;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,10 @@ public class EtcdDiscoveryClientTest {
         client = Client.builder().endpoints("http://127.0.0.1:2379").build();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        discoveryClient = new EtcdDiscoveryClient(client.getKVClient(), client.getWatchClient(), objectMapper);
+        discoveryClient = new EtcdDiscoveryClient(
+                client,
+                new EtcdClientProperties(),
+                objectMapper);
     }
 
     @AfterAll

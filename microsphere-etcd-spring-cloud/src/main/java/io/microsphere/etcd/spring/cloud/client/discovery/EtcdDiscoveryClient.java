@@ -18,6 +18,7 @@ package io.microsphere.etcd.spring.cloud.client.discovery;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.etcd.jetcd.ByteSequence;
+import io.etcd.jetcd.Client;
 import io.etcd.jetcd.KV;
 import io.etcd.jetcd.KeyValue;
 import io.etcd.jetcd.Watch;
@@ -26,6 +27,7 @@ import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.options.WatchOption;
 import io.etcd.jetcd.watch.WatchEvent;
 import io.etcd.jetcd.watch.WatchResponse;
+import io.microsphere.etcd.spring.cloud.client.EtcdClientProperties;
 import io.microsphere.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,19 +64,20 @@ public class EtcdDiscoveryClient implements DiscoveryClient, DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(EtcdDiscoveryClient.class);
 
-    private static final String rootPath = "/services";
-
     private final KV kv;
 
     private final Watch watch;
+
+    private final EtcdClientProperties etcdClientProperties;
 
     private final ObjectMapper objectMapper;
 
     private final ConcurrentMap<String, List<ServiceInstance>> serviceInstancesCache;
 
-    public EtcdDiscoveryClient(KV kv, Watch watch, ObjectMapper objectMapper) {
-        this.kv = kv;
-        this.watch = watch;
+    public EtcdDiscoveryClient(Client client, EtcdClientProperties etcdClientProperties, ObjectMapper objectMapper) {
+        this.kv = client.getKVClient();
+        this.watch = client.getWatchClient();
+        this.etcdClientProperties = etcdClientProperties;
         this.objectMapper = objectMapper;
         this.serviceInstancesCache = new ConcurrentHashMap<>(16);
     }
@@ -93,6 +96,7 @@ public class EtcdDiscoveryClient implements DiscoveryClient, DisposableBean {
     }
 
     protected List<ServiceInstance> doGetInstances(String serviceId) {
+        String rootPath = etcdClientProperties.getRootPath();
         String servicePath = buildServicePath(rootPath, serviceId);
         List<KeyValue> keyValues = getKeyValues(servicePath, false);
         List<ServiceInstance> serviceInstances = keyValues.stream()
@@ -174,6 +178,7 @@ public class EtcdDiscoveryClient implements DiscoveryClient, DisposableBean {
     private String getInstanceId(KeyValue keyValue, String serviceId) {
         ByteSequence key = keyValue.getKey();
         String serviceInstancePath = key.toString();
+        String rootPath = etcdClientProperties.getRootPath();
         String servicePath = buildServicePath(rootPath, serviceId);
         return StringUtils.substringAfter(serviceInstancePath, servicePath);
     }

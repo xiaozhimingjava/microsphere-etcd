@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.microsphere.etcd.spring.cloud.client.discovery.autoconfigure.EtcdDiscoveryAutoConfiguration
