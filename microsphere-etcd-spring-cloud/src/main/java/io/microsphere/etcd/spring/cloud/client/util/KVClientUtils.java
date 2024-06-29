@@ -40,11 +40,11 @@ public class KVClientUtils {
     }
 
     public static String buildServiceInstancePath(String rootPath, String serviceId, String instanceId) {
-        return buildServicePath(rootPath, serviceId) + "/" + instanceId;
+        return buildServicePath(rootPath, serviceId) + instanceId;
     }
 
     public static String buildServicePath(String rootPath, String serviceId) {
-        return rootPath + "/" + serviceId;
+        return rootPath + "/" + serviceId + "/";
     }
 
     public static String resolveServiceId(String serviceInstancePath, String rootPath) {
