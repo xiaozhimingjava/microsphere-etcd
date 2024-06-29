@@ -143,7 +143,7 @@ public class EtcdDiscoveryClient implements DiscoveryClient, DisposableBean {
         KeyValue currentKeyValue = event.getKeyValue();
         String instanceId = getInstanceId(currentKeyValue, serviceId);
         ServiceInstance serviceInstance = getServiceInstance(currentKeyValue);
-        synchronized (this) { // TODO: Opt
+        synchronized (this) { // TODO: Optimization Lock
             List<ServiceInstance> serviceInstances = serviceInstancesCache.computeIfAbsent(serviceId, i -> new LinkedList<>());
 
             if (isAddServiceInstance(event)) { // Add
