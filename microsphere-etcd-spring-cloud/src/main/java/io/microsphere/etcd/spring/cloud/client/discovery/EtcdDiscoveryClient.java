@@ -191,7 +191,7 @@ public class EtcdDiscoveryClient implements DiscoveryClient, DisposableBean {
     private void deleteServiceInstance(WatchEvent event, String serviceId) {
         KeyValue currentKeyValue = event.getKeyValue();
         String instanceId = getInstanceId(currentKeyValue, serviceId);
-        synchronized (this) { // TODO: Opt
+        synchronized (this) { // TODO: Optimization Lock
             List<ServiceInstance> serviceInstances = serviceInstancesCache.get(serviceId);
             if (!CollectionUtils.isEmpty(serviceInstances)) {
                 Iterator<ServiceInstance> iterator = serviceInstances.iterator();
