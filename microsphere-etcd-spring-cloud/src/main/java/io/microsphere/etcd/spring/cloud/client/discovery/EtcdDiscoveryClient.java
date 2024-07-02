@@ -110,7 +110,7 @@ public class EtcdDiscoveryClient implements DiscoveryClient, DisposableBean {
 
     private void watchService(String servicePath, String serviceId) {
         ByteSequence key = toByteSequence(servicePath);
-        WatchOption.Builder builder = WatchOption.newBuilder().isPrefix(true);
+        WatchOption.Builder builder = WatchOption.newBuilder().withPrevKV(true).isPrefix(true);
         watch.watch(key, builder.build(), new Watch.Listener() {
             @Override
             public void onNext(WatchResponse response) {
