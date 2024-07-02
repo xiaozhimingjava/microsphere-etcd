@@ -73,8 +73,10 @@ public class EtcdDiscoveryClientTest {
     @Test
     public void testGetInstances() throws InterruptedException {
         List<String> services = discoveryClient.getServices();
-        services.stream().map(discoveryClient::getInstances);
-
+        services.stream().map(discoveryClient::getInstances)
+                .forEach(instances -> {
+                    assertNotNull(instances);
+                });
         services.stream().map(discoveryClient::getInstances)
                 .forEach(instances -> {
                     assertNotNull(instances);
