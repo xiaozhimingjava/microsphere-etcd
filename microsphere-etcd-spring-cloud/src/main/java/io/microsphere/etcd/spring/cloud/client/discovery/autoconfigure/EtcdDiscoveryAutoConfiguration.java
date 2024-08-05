@@ -21,6 +21,7 @@ import io.etcd.jetcd.Client;
 import io.etcd.jetcd.ClientBuilder;
 import io.microsphere.etcd.spring.cloud.client.EtcdClientProperties;
 import io.microsphere.etcd.spring.cloud.client.discovery.EtcdDiscoveryClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
@@ -37,6 +38,7 @@ import java.util.Set;
 @EnableConfigurationProperties(EtcdClientProperties.class)
 public class EtcdDiscoveryAutoConfiguration {
 
+    @ConditionalOnMissingBean
     @Bean(destroyMethod = "close")
     public Client etcdClient(EtcdClientProperties etcdClientProperties) {
         Set<String> endpoints = etcdClientProperties.getEndpoints();
@@ -45,6 +47,7 @@ public class EtcdDiscoveryAutoConfiguration {
         return clientBuilder.build();
     }
 
+    @ConditionalOnMissingBean
     @Bean
     public EtcdDiscoveryClient etcdDiscoveryClient(Client client, EtcdClientProperties etcdClientProperties
             , ObjectMapper objectMapper) {
